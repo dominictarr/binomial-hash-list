@@ -1,0 +1,19 @@
+{
+  "name": "binomal-hash-list",
+  "description": "",
+  "version": "0.0.0",
+  "homepage": "https://github.com/dominictarr/binomal-hash-list",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dominictarr/binomal-hash-list.git"
+  },
+  "dependencies": {
+    "to-base": "~1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "set -e; for t in test/*.js; do node $t; done"
+  },
+  "author": "Dominic Tarr <dominic.tarr@gmail.com> (dominictarr.com)",
+  "license": "MIT"
+}
