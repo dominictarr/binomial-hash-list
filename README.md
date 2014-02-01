@@ -1,12 +1,12 @@
-# binomal-hash-list
+# binomial-hash-list
 
-A list of increasingly larger hash trees, like a binomal heap.
+A list of increasingly larger hash trees, like a binomial heap.
 
 ## Abstract
 
 This is a scheme for hashing a dataset where each object
 has a timestamp, such that it's possible to compare two
-binomal hash lists and efficently detect additions, assuming
+binomial hash lists and efficently detect additions, assuming
 that new records have a recent timestamp. (it's not essential 
 that the timestamps are strictly ordered, or correct)
 
@@ -39,9 +39,9 @@ the size of the dataset.
 The increase is proportional to the log of the dataset, but internet users
 are used to a fixed number of round trips to load even a popular page.
 
-## Binomal Hash List
+## Binomial Hash List
 
-Binomal Hash Lists group time ordered data into increasingly larger buckets.
+Binomial Hash Lists group time ordered data into increasingly larger buckets.
 The most recent objects will fall in the smallest bucket, and the oldest
 ones will fall into the oldest bucket.
 
