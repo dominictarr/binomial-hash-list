@@ -1,11 +1,11 @@
 {
-  "name": "binomal-hash-list",
+  "name": "binomial-hash-list",
   "description": "hash timestamped objects into increasingly larger groups",
   "version": "1.0.0",
-  "homepage": "https://github.com/dominictarr/binomal-hash-list",
+  "homepage": "https://github.com/dominictarr/binomial-hash-list",
   "repository": {
     "type": "git",
-    "url": "git://github.com/dominictarr/binomal-hash-list.git"
+    "url": "git://github.com/dominictarr/binomial-hash-list.git"
   },
   "dependencies": {
     "to-base": "~1.0.0",
