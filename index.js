@@ -1,11 +1,9 @@
-
-
 var toBase = require('to-base')
 
 var heaps = function (n, b) {
   b = b || 2
   var parts = toBase(n, b)
-  console.log(parts)
+
   for(var i = parts.length - 1 ; i >= 0; i--) {
     var j = i
     while(parts[j] === 0) {
@@ -43,14 +41,17 @@ var buckets = function (start, size) {
   while(i--) {
     var v = h[i]
     var bSize = Math.pow(base, i) * size
-    groups.push({gt: cumulative, lte: cumulative += bSize, size: bSize, v: v})
+    groups.push({gte: cumulative, lt: cumulative += bSize, size: bSize, v: v})
     if(v == 2)
-      groups.push({gt: cumulative, lte: cumulative += bSize, size: bSize})
+      groups.push({gte: cumulative, lt: cumulative += bSize, size: bSize})
   }
 
-  console.log(groups)
+  return groups
 }
+
+module.exports = buckets
 
 
 if(!module.parent)
   console.log(buckets(null, 5e3))
+
