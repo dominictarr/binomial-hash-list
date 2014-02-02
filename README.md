@@ -43,7 +43,7 @@ are used to a fixed number of round trips to load even a popular page.
 
 Binomial Hash Lists group time ordered data into increasingly larger buckets.
 The most recent objects will fall in the smallest bucket, and the oldest
-ones will fall into the oldest bucket.
+ones will fall into the largest bucket.
 
 
 
