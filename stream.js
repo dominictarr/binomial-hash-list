@@ -28,7 +28,7 @@ module.exports = function (opts) {
   var count = 0
 
   function next () {
-    if(count !== 0) {
+    if(count >= 0) {
       current.hash = hash.digest('hex')
       current.count = count
       count = 0
@@ -42,7 +42,7 @@ module.exports = function (opts) {
 
   return through(function (data) {
     var ts = getTs(data)
-
+    count ++
     if(ts < current.lt) {
       var enc = (
           Buffer.isBuffer(data) ? null
