@@ -28,36 +28,38 @@ module.exports = function (opts) {
   var count = 0
 
   function next () {
-    if(count >= 0) {
+    if(count > 0) {
       current.hash = hash.digest('hex')
       current.count = count
       count = 0
       hash = createHash(alg)
       this.queue(current)
     }
-    current = ranges.shift()
-
+    current = ranges.shift()      
     if(!current) return this.queue(null)
   }
 
   return through(function (data) {
     var ts = getTs(data)
-    count ++
-    if(ts < current.lt) {
-      var enc = (
-          Buffer.isBuffer(data) ? null
-        : 'string' === typeof data ? 'utf8'
-        : data=stringify(data), 'ascii'
-      )
 
-      hash.update(data, enc)
-      //this shouldn't happen
-      if(ts < current.gte)
-        this.emit('error',
-          new Error('timestamps out of order:'+ts+'>='+current.gte))
+    //this should never happen
+    if(ts < current.gte)
+      return this.emit('error',
+        new Error('timestamps out of order:'+ts+'>='+current.gte))
 
-    } else
+    //if we are now in the next group, continue.
+    while(ts >= current.lt)
       next.call(this)
+
+    count ++
+
+    var enc = (
+        Buffer.isBuffer(data) ? null
+      : 'string' === typeof data ? 'utf8'
+      : data=stringify(data), 'ascii'
+    )
+
+    hash.update(data, enc)
   }, function () {
     next.call(this)
     this.queue(null)
