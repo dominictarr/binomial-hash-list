@@ -22,11 +22,16 @@ module.exports = function (opts) {
 
   var current = ranges.shift()
   var hash = createHash(alg)
+  var count = 0
 
   function next () {
-    current.hash = hash.digest('hex')
-    hash = createHash(alg)
-    this.queue(current)
+    if(count !== 0) {
+      current.hash = hash.digest('hex')
+      current.count = count
+      count = 0
+      hash = createHash(alg)
+      this.queue(current)
+    }
     current = ranges.shift()
 
     if(!current) return this.queue(null)
