@@ -15,6 +15,9 @@ module.exports = function (opts) {
 
   var _ts = opts.ts, getTs = _ts
 
+  if(!_ts)
+    throw new Error('a ts function or property name must be provided')
+
   if('string' === typeof _ts)
     getTs = function (data) {
       return new Date(data[_ts])
