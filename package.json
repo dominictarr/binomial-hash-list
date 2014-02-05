@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "to-base": "~1.0.0",
-    "json-stable-stringify": "~0.1.1"
+    "json-stable-stringify": "~0.1.1",
+    "through": "~2.3.4"
   },
   "devDependencies": {},
   "scripts": {
