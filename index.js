@@ -19,7 +19,8 @@ var heaps = function (n, b) {
 }
 
 //time of earliest record, bucket size.
-var buckets = function (start, size) {
+var buckets = function (start, end, size) {
+  if(!size) size = end, end = Date.now()
   const base = 2
  //5 minutes
   size = size || 300000
