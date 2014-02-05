@@ -48,8 +48,9 @@ module.exports = function (opts) {
         new Error('timestamps out of order:'+ts+'>='+current.gte))
 
     //if we are now in the next group, continue.
-    while(ts >= current.lt)
+    while(current && ts >= current.lt) {
       next.call(this)
+    }
 
     count ++
 
