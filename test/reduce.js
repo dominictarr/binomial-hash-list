@@ -46,10 +46,10 @@ tape('simple 3', function (t) {
   t.equal(result[0].hash, a[2])
   t.equal(result.length, 2)
 
-  t.equal(result[0].level, 1)
+  t.equal(result[0].level, 0)
   t.equal(combine(a[1],a[0]), result[1].hash)
 
-  t.equal(result[1].level, 2)
+  t.equal(result[1].level, 1)
   console.log(JSON.stringify(result, null, 2))
   t.end()
 })
@@ -64,9 +64,9 @@ tape('simple 4', function (t) {
 
   t.equal(result[1].hash, a[2])
 
-  t.equal(result[0].level, 1)
+  t.equal(result[0].level, 0)
   t.equal(combine(a[1],a[0]), result[2].hash)
-  t.equal(result[2].level, 2)
+  t.equal(result[2].level, 1)
   console.log(JSON.stringify(result, null, 2))
   t.end()
 })
@@ -79,19 +79,15 @@ tape('simple 7', function (t) {
   t.equal(result.length, 3)
 
   t.equal(result[0].hash, a[6])
-  t.equal(result[0].level, 1)
+  t.equal(result[0].level, 0)
 
   t.equal(result[1].hash, combine(a[5],a[4]))
-  t.equal(result[1].level, 2)
+  t.equal(result[1].level, 1)
 
   t.equal(result[2].hash, combine(combine(a[3],a[2]), combine(a[1], a[0])))
-  t.equal(result[2].level, 3)
+  t.equal(result[2].level, 2)
 
-//  t.equal(combine(a[1],a[0]), result[2].hash)
-//  t.equal(result[2].level, 2)
   console.log(JSON.stringify(result, null, 2))
   t.end()
 })
-
-
 
