@@ -10,9 +10,13 @@
   "dependencies": {
     "to-base": "~1.0.0",
     "json-stable-stringify": "~0.1.1",
-    "through": "~2.3.4"
+    "through": "~2.3.4",
+    "pull-through": "~1.0.10",
+    "pull-stream": "~2.21.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tape": "~2.12.3"
+  },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
