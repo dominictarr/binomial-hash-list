@@ -24,7 +24,8 @@ module.exports = function (size, ts) {
     hash.update(stringify(data) + '\n', 'ascii')
 
   }, function () {
-    this.queue({start: current, length: size, hash: hash.digest('hex')})
+    if(current)
+      this.queue({start: current, length: size, hash: hash.digest('hex')})
     this.queue(null)
   })
 }
