@@ -54,13 +54,24 @@ var crypto = require('crypto')
   empty stacks, I could begin by folding up the current small stacks,
   then inserting new stuff in front.
 
-  --
-
 */
 
+//function combine (a, b) {
+//  return crypto.createHash('sha256').update(a, 'hex').update(b, 'hex').digest('hex')
+//}
+
 function combine (a, b) {
-  return crypto.createHash('sha256').update(a, 'hex').update(b, 'hex').digest('hex')
-}
+    return {
+      start: a.start,
+      length: a.length + b.length,
+      hash:
+        crypto.createHash('sha256')
+          .update(a.hash, 'hex')
+          .update(b.hash, 'hex')
+          .digest('hex')
+      }
+  }
+
 function inject (combine) {
   return function (acc, item) {
       var updates = [0, 0, {level: 0, hash: item}]
