@@ -1,5 +1,5 @@
 var tape = require('tape')
-var replicate = require('../replicate')
+var replicate = require('../')
 var pull = require('pull-stream')
 
 //an in memory database with the right api.
