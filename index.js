@@ -31,17 +31,29 @@ function onEnd(end_cb) {
 // a cb, this is called when all records have been written.
 // * maybe this could be a transform stream, and then the replication can be 2 ways.
 
+var version = require('./package').version
+
 module.exports = function (opts, cb) {
   return handshake(function (cb) {
     pull(
-      opts.read(),
+      opts.read({}),
       ranges(opts.size, opts.ts),
       reduce(function (err, tree) {
-        cb(err, tree)
+        cb(err, {tree: tree, version: version, server: opts.server})
       })
     )
   }, function (mine, yours) {
+
+    //TODO: replace this with stream errors!!!
+    if(mine.server && yours.server)
+      throw new Error('both ends cannot be servers')
+    if(!mine.server && !yours.server)
+      throw new Error('at least one end must be a server')
+    if(mine.version.split('.')[0] !== yours.version.split('.')[0])
+      throw new Error('major versions differ!')
+
     if(!opts.server) return { sink: opts.write(cb), source: pull.defer()}
+
     var missing = compare(mine, yours)
     return {
       source: pull(
