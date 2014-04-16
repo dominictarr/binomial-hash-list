@@ -33,6 +33,13 @@ function onEnd(end_cb) {
 
 var version = require('./package').version
 
+function errorStream(err) {
+  return {
+    source: function (abort, cb) { cb(err) },
+    sink: function (read) { read(err, function () {}) }
+  }
+}
+
 module.exports = function (opts, cb) {
   return handshake(function (cb) {
     pull(
@@ -44,17 +51,22 @@ module.exports = function (opts, cb) {
     )
   }, function (mine, yours) {
 
-    //TODO: replace this with stream errors!!!
+    var err
     if(mine.server && yours.server)
-      throw new Error('both ends cannot be servers')
-    if(!mine.server && !yours.server)
-      throw new Error('at least one end must be a server')
-    if(mine.version.split('.')[0] !== yours.version.split('.')[0])
-      throw new Error('major versions differ!')
+      err = new Error('both ends cannot be servers')
+    else if(!mine.server && !yours.server)
+      err = new Error('at least one end must be a server')
+    else if(mine.version.split('.')[0] !== yours.version.split('.')[0])
+      err = new Error('major versions differ!')
+
+    if(err) {
+      cb(err)
+      return errorStream(err)
+    }
 
     if(!opts.server) return { sink: opts.write(cb), source: pull.defer()}
 
-    var missing = compare(mine, yours)
+    var missing = compare(mine.tree, yours.tree)
     return {
       source: pull(
         cat(missing.reverse()
