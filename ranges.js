@@ -11,8 +11,11 @@ module.exports = function (size, ts) {
   hash = createHash('sha256')
   return through(function (data) {
     var t = ts(data)
+    if('number' !== typeof t)
+      t = 'string' === typeof t ? +new Date(t) : +t
+
     if(!start)
-      current = start = t - t%size
+      current = start = t - t % size
 
     if(t > current + size) {
       this.queue({start: current, length: size, hash: hash.digest('hex'), count: count})
@@ -20,6 +23,7 @@ module.exports = function (size, ts) {
       hash = createHash('sha256')
       count = 0
     }
+
     count ++
     hash.update(stringify(data) + '\n', 'ascii')
 
