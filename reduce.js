@@ -3,10 +3,11 @@ var pull = require('pull-stream')
 var crypto = require('crypto')
 
 function combine (a, b) {
+//    process.assert(b.start == a.end, 'non adjacent ranges:'+[a.start,a.start + a.length , b.start].join(', '))
     return {
-      start: a.start,
-      length: a.length + b.length,
-      hash:
+      start : Math.min(a.start, b.start),
+      end   : Math.max(a.end, b.end),
+      hash  :
         crypto.createHash('sha256')
           .update(a.hash, 'hex')
           .update(b.hash, 'hex')

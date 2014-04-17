@@ -13,7 +13,7 @@ function onEnd(end_cb) {
   return function (read) {
     return function (abort, cb) {
       read(abort, function (err, data) {
-        if(err) end_cb(err)
+        if(err) end_cb(err === true ? null : err)
         cb(err, data)
       })
     }
@@ -64,16 +64,25 @@ module.exports = function (opts, cb) {
       return errorStream(err)
     }
 
-    if(!opts.server) return { sink: opts.write(cb), source: pull.defer()}
+    var defer = pull.defer()
+
+    if(!opts.server)
+      return {
+        sink: opts.write(function (err, w) {
+            defer.resolve(function (end, cb) { cb(end || true) })
+            cb(err, w)
+          }),
+        source: defer
+      }
 
     var missing = compare(mine.tree, yours.tree)
+      console.error('MISSING', missing)
     return {
       source: pull(
         cat(missing.reverse()
           .map(function(range) {
-            return opts.read({gte: range.start, lt: range.start + range.length})
-          })),
-        onEnd(cb || function () {})
+            return opts.read({gte: range.start, lt: range.end})
+          }))
       ),
       sink: pull.drain(null, cb)
     }

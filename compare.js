@@ -8,7 +8,7 @@ function merge (into, from) {
 }
 
 function copy(e) {
-  return {start: e.start, length: e.length, hash: e.hash}
+  return {start: e.start, length: e.length, hash: e.hash, level:e.level}
 }
 
 module.exports = function (serverTree, clientTree) {
@@ -31,7 +31,7 @@ module.exports = function (serverTree, clientTree) {
         var k = e.parents[i].hash
         if(!client[k]) missing.push(e.parents[i])
       }
-        if(missing.length == e.parents.length)
+        if(missing.length == e.parents.length - 2)
           request.push(copy(e))
         else
           [].splice.apply(request, missing)
