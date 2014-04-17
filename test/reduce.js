@@ -1,6 +1,7 @@
 var tape = require('tape')
 var pull = require('pull-stream')
 var crypto = require('crypto')
+var ranges = require('../ranges')
 var reduce = require('../reduce')
 var r = reduce.reduce
 
@@ -14,7 +15,7 @@ function n (N) {
     pull.count(N - 1),
     pull.map(function (i) {
       return {
-        start: i, length: 1,
+        start: i, end: i + 1,
         hash: crypto.createHash('sha256').update(i.toString()).digest('hex')
       }
     }),

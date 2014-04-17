@@ -65,8 +65,8 @@ tape('not eq', function (t) {
       var request = v1.filter(function (e) {
         for(var i in diff) {
           var v = diff[i]
-          console.log(e, e.value >= v.start, e.value < v.start + v.length)
-          if((e.value >= v.start) && (e.value < v.start + v.length))
+          console.log(e, e.value >= v.start, e.value < v.end)
+          if((e.value >= v.start) && (e.value < v.end))
             return true
         }
       })

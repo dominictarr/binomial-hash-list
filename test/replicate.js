@@ -2,52 +2,9 @@ var tape = require('tape')
 var replicate = require('../')
 var pull = require('pull-stream')
 
+var fakeDb = require('./mock')
+
 //an in memory database with the right api.
-
-function fakeDb () {
-  var store = {}, db
-  return db = {
-    store: store,
-    get: function (key) {
-      return store[key]
-    },
-    put: function (key, value) {
-      store[key] = value
-      value.ts = value.ts || Date.now()
-      return this
-    },
-    read: function (opts) {
-      var array = Object.keys(store).map(function (key) {
-        return {key: key, value: store[key]}
-      }).sort(function (a, b) {
-        return a.ts - b.ts
-      })
-
-      return pull(pull.values(array), pull.filter(function (item) {
-        if(opts && opts.gte && item.ts <  opts.gte) return false
-        if(opts && opts.gt  && item.ts <= opts.gt)  return false
-        if(opts && opts.lte && item.ts >  opts.lte) return false
-        if(opts && opts.lt  && item.ts >= opts.lt)  return false
-        return true
-      }))
-    },
-    write: function (cb) {
-      var writes = 0
-      return pull.drain(function (row) {
-        writes ++
-        store[row.key] = row.value
-      }, function (err) { cb(err, writes) })
-    },
-    replicate: function (server, cb) {
-      return replicate({
-        ts: function (e) { return e.value.ts },
-        size: 7*24*60*60*1000, //one week
-        read: db.read, write: db.write,
-        server: server
-      }, cb)
-    }
-  }
-}
 
 
 tape('sanity', function (t) {
@@ -74,7 +31,7 @@ tape('sanity', function (t) {
 tape('simple replicate', function (t) {
   var start = +new Date('2014-01-01'), rolling = start
   function week () {
-    return rolling += Math.random()*14*24*60*60*1000
+    return rolling += (Math.random()*14*24*60*60*1000)
   }
 
   var db1 = fakeDb()
@@ -109,7 +66,7 @@ tape('simple replicate', function (t) {
 tape('simple replicate 2', function (t) {
   var start = +new Date('2014-01-01'), rolling = start
   function week () {
-    return rolling += Math.random()*14*24*60*60*1000
+    return rolling += (Math.random()*14*24*60*60*1000)
   }
 
   var db1 = fakeDb()
@@ -145,7 +102,7 @@ tape('replicate to empty', function (t) {
   var start = +new Date('2012-01-01'), rolling = start
 
   function week () {
-    return rolling += Math.random()*14*24*60*60*1000
+    return rolling += (Math.random()*14*24*60*60*1000)
   }
 
   var db1 = fakeDb()
@@ -177,7 +134,7 @@ tape('replicate to empty', function (t) {
   var start = +new Date('2012-01-01'), rolling = start
 
   function week () {
-    return rolling += Math.random()*14*24*60*60*1000
+    return rolling += (Math.random()*14*24*60*60*1000)
   }
 
   var db1 = fakeDb()
@@ -189,12 +146,20 @@ tape('replicate to empty', function (t) {
       return {key: '' + Math.random(), value: {ts: week()}}
     }),
     db1.write(function (err) {
-      var server = db1.replicate(true)
-      var client = db2.replicate(false, done)
+      var n = 2
+      var server = db1.replicate(true, function (err) {
+        if(err) throw err
+        done()
+      })
+      var client = db2.replicate(false, function (err) {
+        if(err) throw err
+        done()
+      })
 
       pull(server, client, server)
 
       function done(err) {
+        if(--n) return
         console.log('REPLICATED!!!')
         t.deepEqual(db2.store, db1.store)
         t.end()
