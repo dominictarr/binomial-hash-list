@@ -1,7 +1,7 @@
 var through = require('pull-through')
 var createHash = require('crypto').createHash
 var stringify = require('json-stable-stringify')
-
+var assert = process.assert
 module.exports = function (size, ts) {
   var start, current, hash, count = 0
   if('function' !== typeof ts)
@@ -9,6 +9,7 @@ module.exports = function (size, ts) {
   if(isNaN(size) || size < 0)
     throw new Error('size must be a positive integer')
   hash = createHash('sha256')
+  var prev = 0
   return through(function (data) {
     var t = ts(data)
     if('number' !== typeof t)
@@ -18,18 +19,24 @@ module.exports = function (size, ts) {
       current = start = t - t % size
 
     if(t > current + size) {
-      this.queue({start: current, length: size, hash: hash.digest('hex'), count: count})
-      current += size
+      this.queue({start: current, end: current + size, date: new Date(current), hash: hash.digest('hex'), count: count})
+      while(t > current + size)
+        current += size
       hash = createHash('sha256')
       count = 0
     }
+
+    assert(t > prev, 'timestamp out of order')
+    prev = t
+    assert(t >= current, 'timestamp too low')
+    assert(t <  current + size, 'timestamp too high')
 
     count ++
     hash.update(stringify(data) + '\n', 'ascii')
 
   }, function () {
     if(current)
-      this.queue({start: current, length: size, hash: hash.digest('hex')})
+      this.queue({start: current, end: current + size, hash: hash.digest('hex')})
     this.queue(null)
   })
 }
