@@ -33,13 +33,13 @@ module.exports = function (size, ts) {
     // this will still work, as long as the order tends to be the same.
     // *****************************
 
-    if(t < prev)
+    if(!(t >= prev))
       this.emit('error', new Error('timestamp out of order, got:' + t + ' but had: ' + prev))
     prev = t
-    if(t >= current)
+    if(!(t >= current))
       this.emit('error', 'timestamp too low, expected: ' + t + ' >= ' + current)
-    if(t <  current + size)
-      this.emit('error', 'timestamp too high, expected: ' + t +  ' < ' + current + size)
+    if(!(t <  current + size))
+      this.emit('error', 'timestamp too high, expected: ' + t +  ' < ' + (current + size))
 
     count ++
     hash.update(stringify(data) + '\n', 'ascii')
