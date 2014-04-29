@@ -11,7 +11,7 @@
     "to-base": "~1.0.0",
     "json-stable-stringify": "~0.1.1",
     "through": "~2.3.4",
-    "pull-through": "~1.0.10",
+    "pull-through": "~1.0.11",
     "pull-stream": "~2.21.0",
     "pull-cat": "~1.1.5",
     "pull-handshake": "~0.0.1"
