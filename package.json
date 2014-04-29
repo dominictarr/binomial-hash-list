@@ -1,7 +1,7 @@
 {
   "name": "binomial-hash-list",
   "description": "hash timestamped objects into increasingly larger groups",
-  "version": "4.1.3",
+  "version": "4.1.4",
   "homepage": "https://github.com/dominictarr/binomial-hash-list",
   "repository": {
     "type": "git",
