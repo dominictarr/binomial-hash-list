@@ -40,15 +40,19 @@ function errorStream(err) {
   }
 }
 
+var binomial = module.exports.binomial = function (opts, cb) {
+  pull(
+    opts.read({}),
+    ranges(opts.size, opts.ts),
+    reduce(function (err, tree) {
+      cb(err, {tree: tree, version: version, server: opts.server})
+    })
+  )
+}
+
 module.exports = function (opts, cb) {
   return handshake(function (cb) {
-    pull(
-      opts.read({}),
-      ranges(opts.size, opts.ts),
-      reduce(function (err, tree) {
-        cb(err, {tree: tree, version: version, server: opts.server})
-      })
-    )
+    return binomial(opts, cb)
   }, function (mine, yours) {
 
     var err
@@ -88,3 +92,5 @@ module.exports = function (opts, cb) {
     }
   })
 }
+
+
