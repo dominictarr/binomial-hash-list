@@ -26,7 +26,14 @@ module.exports = function (size, ts) {
       count = 0
     }
 
-    assert(t > prev, 'timestamp out of order')
+    // *****************************
+    // allow duplicate timestamps...
+    // cross our fingers for a general order
+    // assuming level-search the secondary sort will be the key
+    // this will still work, as long as the order tends to be the same.
+    // *****************************
+    if(t < prev)
+      throw new Error('timestamp out of order, got:' + t + ' but had: ' + prev)
     prev = t
     assert(t >= current, 'timestamp too low')
     assert(t <  current + size, 'timestamp too high')
