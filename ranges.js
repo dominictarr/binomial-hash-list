@@ -18,9 +18,9 @@ module.exports = function (size, ts) {
     if(!start)
       current = start = t - t % size
 
-    if(t > current + size) {
+    if(t >= current + size) {
       this.queue({start: current, end: current + size, date: new Date(current), hash: hash.digest('hex'), count: count})
-      while(t > current + size)
+      while(t >= current + size)
         current += size
       hash = createHash('sha256')
       count = 0
