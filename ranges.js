@@ -32,11 +32,14 @@ module.exports = function (size, ts) {
     // assuming level-search the secondary sort will be the key
     // this will still work, as long as the order tends to be the same.
     // *****************************
+
     if(t < prev)
-      throw new Error('timestamp out of order, got:' + t + ' but had: ' + prev)
+      this.emit('error', new Error('timestamp out of order, got:' + t + ' but had: ' + prev))
     prev = t
-    assert(t >= current, 'timestamp too low')
-    assert(t <  current + size, 'timestamp too high')
+    if(t >= current)
+      this.emit('error', 'timestamp too low, expected: ' + t + ' >= ' + current)
+    if(t <  current + size)
+      this.emit('error', 'timestamp too high, expected: ' + t +  ' < ' + current + size)
 
     count ++
     hash.update(stringify(data) + '\n', 'ascii')
